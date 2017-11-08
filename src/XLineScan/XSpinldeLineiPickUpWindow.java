@@ -24,21 +24,26 @@ public class XSpinldeLineiPickUpWindow extends RoiPickUpWindow {
     private final int dnaChannel;
     
     public XSpinldeLineiPickUpWindow(String fileName, XLineScanWorker lineScanWorker, boolean autoDetection, int mtChannel, int dnaChannel) {
-        super(fileName, lineScanWorker, autoDetection);
+        super(fileName, lineScanWorker);
         IJ.setTool(Toolbar.LINE);        
         this.mtChannel=mtChannel;
         this.dnaChannel=dnaChannel;
+        if (autoDetection) {
+            Overlay overlay = autoDetection(imp);
+            imp.setOverlay(overlay);
+        }        
     }
 
-    @Override
-    protected Overlay autoDetection(ImagePlus imp) {
+    private Overlay autoDetection(ImagePlus imp) {
         SpindleIdentifier si = new SpindleIdentifier(imp, mtChannel, dnaChannel);
         Overlay overlay = new Overlay();
         List<SpindleContourAnalyzer> spindles = si.getSpindles();
+        int i=0;
         for (SpindleContourAnalyzer s : spindles) {
             if (s.getSpindleType() == SpindleContourAnalyzer.SINGLE_MT_SINGLE_DNA) {
                 PointPair pp = s.getMainMtAxis();
-                overlay.add(new Line(pp.A.x, pp.A.y, pp.B.x, pp.B.y));
+                overlay.add(new Line(pp.A.x, pp.A.y, pp.B.x, pp.B.y), Integer.toString(i));
+                i++;
             }
         }
 

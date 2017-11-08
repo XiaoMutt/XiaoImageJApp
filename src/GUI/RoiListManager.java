@@ -22,41 +22,49 @@ public class RoiListManager extends javax.swing.JFrame {
     private final HashMap<String, Roi> roiMap = new HashMap<>();
     private final ImagePlus imp;
     private final RoiPickUpWindow imageWd;
-    private Overlay ovl;
+    private Overlay overlay;
     private final DefaultListModel<String> listModel = new DefaultListModel<>();
     private int editingIndex = -1;
-    private int countRoi=0;
+    private int countRoi = 0;
 
     /**
      * Creates new form RoiListManager
      *
-     * @param imageWindow
+     * @param imageWindow the ImageWindow paired with this RoiManager.
      */
     public RoiListManager(RoiPickUpWindow imageWindow) {
         initComponents();
         imp = imageWindow.getImagePlus();
         imageWd = imageWindow;
+
     }
 
     @Override
     public void setVisible(boolean visible) {
-        if (imp.getOverlay() != null) {
-            ovl = imp.getOverlay();
-        } else {
-            ovl = new Overlay();
-        }
-        ovl.setStrokeColor(Color.yellow);
-        ovl.setLabelColor(Color.magenta);
-        ovl.setLabelFont(new Font("Helvetica", Font.BOLD, 18));
-        ovl.drawLabels(true);
-        loadRoiToDisplayList();
+
+        loadRoiFromImpToList();
         super.setVisible(visible);
     }
 
-    private void loadRoiToDisplayList() {
-        for (Roi roi : ovl.toArray()) {
+    private void loadRoiFromImpToList() {
+        if (imp.getOverlay() != null) {
+            overlay = imp.getOverlay();
+        } else {
+            overlay = new Overlay();
+            imp.setOverlay(overlay);
+        }
+        //set stroke color
+        overlay.setStrokeColor(Color.yellow);
+        //set label color
+        overlay.setLabelColor(Color.magenta);
+        //set label font
+        overlay.setLabelFont(new Font("Helvetica", Font.BOLD, 18));
+        //draw labels and use name as labels
+        overlay.drawLabels(true);
+        overlay.drawNames(true);
+        for (Roi roi : overlay.toArray()) {
             //String name = Integer.toString(i) + "-" + roi.getHashCode();
-            String name=roi.getName();
+            String name = roi.getName();
             roiMap.put(name, roi);
             listModel.addElement(name);
             countRoi++;
@@ -166,30 +174,32 @@ public class RoiListManager extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void roiDisplayListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_roiDisplayListMouseClicked
-
-        if (editingIndex != -1) {
+        if (editingIndex != -1) {//this is an editing event;
             addBn.setText("Add");
             String name = listModel.getElementAt(editingIndex);
-            Roi oldRoi=roiMap.get(name);
-            ovl.remove(oldRoi);
+            //get new roi from imp;
             Roi roi = imp.getRoi();
-            roiMap.replace(name, roi);
-            ovl.add(roi);
+            if (roi != null) {//there is a new roi
+                //replace the old roi with the new roi;
+                roiMap.put(name, roi);
+                overlay.add(roi, name);
+            } else {//there is not a new roi
+                //put back the old roi;
+                //get old roi;
+                roi = roiMap.get(name);
+                overlay.add(roi, name);
+            }
             editingIndex = -1;
             imp.deleteRoi();
-
         }
         // if (evt.getClickCount() == 2) {
         addBn.setText("Accept");
         editingIndex = roiDisplayList.locationToIndex(evt.getPoint());
         String name = listModel.get(editingIndex);
         Roi roi = roiMap.get(name);
-        imp.setRoi(roi, true);
-        //ovl.remove(roi);
-
-        // }
-        imp.setOverlay(ovl);
-
+        imp.setRoi(roi);
+        overlay.remove(roi);
+ 
     }//GEN-LAST:event_roiDisplayListMouseClicked
 
     private void deleteBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBnActionPerformed
@@ -198,7 +208,7 @@ public class RoiListManager extends javax.swing.JFrame {
             String name = listModel.get(i);
             listModel.remove(i);
             Roi roi = roiMap.remove(name);
-            ovl.remove(roi);
+            overlay.remove(roi);
 
             if (editingIndex != -1) {
                 editingIndex = -1;
@@ -207,26 +217,27 @@ public class RoiListManager extends javax.swing.JFrame {
 
         }
         imp.deleteRoi();
-        hideCb.setSelected(true);
     }//GEN-LAST:event_deleteBnActionPerformed
 
     private void addBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBnActionPerformed
         Roi roi = imp.getRoi();
         if (roi != null) {
-            if (editingIndex != -1) {
+            roi.setStrokeColor(Color.yellow);
+            if (editingIndex != -1) {//this is editing
                 String name = listModel.getElementAt(editingIndex);
                 roiMap.replace(name, roi);
                 editingIndex = -1;
                 addBn.setText("Add");
-            } else {
+            } else {//this is adding new
                 String name = Integer.toString(countRoi);
+                countRoi++;
                 listModel.addElement(name);
                 roi.setName(name);
                 //roiDisplayList.setModel(listModel);
                 roiMap.put(name, roi);
             }
-            ovl.add(roi);
-            hideCb.setSelected(true);
+            overlay.add(roi);
+            imp.deleteRoi();
         }
     }//GEN-LAST:event_addBnActionPerformed
 
@@ -236,7 +247,7 @@ public class RoiListManager extends javax.swing.JFrame {
             String name = listModel.getElementAt(editingIndex);
             Roi roi = imp.getRoi();
             roiMap.replace(name, roi);
-            ovl.add(roi);
+            overlay.add(roi);
             editingIndex = -1;
             imp.deleteRoi();
 
@@ -246,11 +257,21 @@ public class RoiListManager extends javax.swing.JFrame {
     }//GEN-LAST:event_doneBnActionPerformed
 
     private void hideCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideCbActionPerformed
+        if (editingIndex != -1) {//this is editing event;
+            addBn.setText("Add");
+            String name = listModel.getElementAt(editingIndex);
+            //put back the old roi;
+            //get old roi;
+            Roi roi = roiMap.get(name);
+            overlay.add(roi, name);
+            editingIndex = -1;
+            imp.deleteRoi();
+        }
         if (hideCb.isSelected()) {
             imp.deleteRoi();
             imp.setOverlay(null);
         } else {
-            imp.setOverlay(ovl);
+            imp.setOverlay(overlay);
         }
 // TODO add your handling code here:
     }//GEN-LAST:event_hideCbActionPerformed

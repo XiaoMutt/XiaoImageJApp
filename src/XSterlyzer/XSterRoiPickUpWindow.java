@@ -18,23 +18,19 @@ import java.util.List;
  */
 public class XSterRoiPickUpWindow extends RoiPickUpWindow {
 
-    private final int mtChannel;
-
     public XSterRoiPickUpWindow(String fileName, XSterlyzerWorker XSterlyzerWorker, int mtChannel) {
-        super(fileName, XSterlyzerWorker, true);
-        this.mtChannel = mtChannel;
+        super(fileName, XSterlyzerWorker);
+        Overlay overlay = autoDetection(imp, mtChannel);
+        imp.setOverlay(overlay);
     }
 
-    @Override
-    protected Overlay autoDetection(ImagePlus imp) {
+    private Overlay autoDetection(ImagePlus imp, int mtChannel) {
         AsterIdentifier ai = new AsterIdentifier(imp, mtChannel, true);
         Overlay overlay = new Overlay();
         List<Polygon> asters = ai.getAsterPolygons();
         int i = 0;
         for (Polygon s : asters) {
-            PolygonRoi pr = new PolygonRoi(s, Roi.POLYGON);
-            pr.setName(Integer.toString(i));
-            overlay.add(pr);
+            overlay.add(new PolygonRoi(s, Roi.POLYGON), Integer.toString(i));
             i++;
         }
         return overlay;
