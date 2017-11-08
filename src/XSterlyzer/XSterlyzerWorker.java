@@ -112,7 +112,7 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
     protected void done() {
         try {
             if (DataSaver != null) {
-//the done may be called several times during cancel or normal finish. This is to make sure the DataSaver is closed();
+                //the done may be called several times during cancel or normal finish. This is to make sure the DataSaver is closed();
                 DataSaver.close();
             }
         } catch (IOException ex) {
