@@ -202,6 +202,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
                     IJ.log("INFO: XSterlyzer canncelled");
                     runBn.setText("Run");
                 } else if (worker.isDone()) {
+                    IJ.log("INFO: Xsterlyzer finished");
                     runBn.setText("Run");
                 } else if (evt1.getPropertyName().equals("PausedAt")) {
                     String pausedAt = (String) evt1.getNewValue();

@@ -226,13 +226,6 @@ public class XLineScanWorker extends ImageProcessingSwingWorker {
         results.setNumeratorProfile(XMean[0], SD[0]);
         results.setDenominatorProfile(XMean[1], SD[1]);
         results.setRaitoProfile(XMean[2], SD[2]);
-        try {
-            DataSaver.close();
-            publish("INFO: processing completed");
-
-        } catch (IOException ex) {
-            publish("ERROR: cannot save the result file");
-        }
         return results;
 
     }

@@ -141,13 +141,6 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
                 processImage(workingFilePath);
             }
         }
-        try {
-            DataSaver.close();
-            publish("INFO: processing completed");
-
-        } catch (IOException ex) {
-            publish("ERROR: cannot save the result file");
-        }
         return null;
     }
 
