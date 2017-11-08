@@ -293,33 +293,33 @@ public class XLineScanGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_openFolderBnActionPerformed
 
     private void runBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runBnActionPerformed
-        XLineScanWorker lineScanWorker = new XLineScanWorker();
-         if ("Run".equals(runBn.getText())) {
+        XLineScanWorker worker = new XLineScanWorker();
+        if ("Run".equals(runBn.getText())) {
             runBn.setText("Cancel");
-            lineScanWorker.setOpenFolder(openFolderTf.getText());
-            lineScanWorker.setNumeratorChannelIndex(Integer.parseInt(numeratorChannelCb.getSelectedItem().toString()));
-            lineScanWorker.setDenomiatorChannelIndex(Integer.parseInt(denominatorChannelCb.getSelectedItem().toString()));
-            lineScanWorker.setFileNameRegex(fileNameRegexCb.getSelectedItem().toString());
-            lineScanWorker.setUsingRollingBall(useRollingBallRb.isSelected());
-            lineScanWorker.setRollingBallRadius(Integer.parseInt(rollingBallRadiusSp.getValue().toString()));
-            lineScanWorker.setNumeratorBackgroundValue(Integer.parseInt(numeratorBackgroundValueSp.getValue().toString()));
-            lineScanWorker.setDenominatorBackgroundValue(Integer.parseInt(denominatorBackgroundValueSp.getValue().toString()));
-            lineScanWorker.setROILineWidth(Integer.parseInt(roiLineWidthSp.getValue().toString()));
-            lineScanWorker.setNormalizedLength(Integer.parseInt(normalizedDataPointsSp.getValue().toString()));
-            lineScanWorker.setManualROI(manualROICb.isSelected());
-            lineScanWorker.setUseAutoDetection(useAutoDetectionCb.isSelected());
-            lineScanWorker.setMtchannel(Integer.parseInt(mtChannelCb.getSelectedItem().toString()));
-            lineScanWorker.setDnachannel(Integer.parseInt(dnaChannelCb.getSelectedItem().toString()));
+            worker.setOpenFolder(openFolderTf.getText());
+            worker.setNumeratorChannelIndex(Integer.parseInt(numeratorChannelCb.getSelectedItem().toString()));
+            worker.setDenomiatorChannelIndex(Integer.parseInt(denominatorChannelCb.getSelectedItem().toString()));
+            worker.setFileNameRegex(fileNameRegexCb.getSelectedItem().toString());
+            worker.setUsingRollingBall(useRollingBallRb.isSelected());
+            worker.setRollingBallRadius(Integer.parseInt(rollingBallRadiusSp.getValue().toString()));
+            worker.setNumeratorBackgroundValue(Integer.parseInt(numeratorBackgroundValueSp.getValue().toString()));
+            worker.setDenominatorBackgroundValue(Integer.parseInt(denominatorBackgroundValueSp.getValue().toString()));
+            worker.setROILineWidth(Integer.parseInt(roiLineWidthSp.getValue().toString()));
+            worker.setNormalizedLength(Integer.parseInt(normalizedDataPointsSp.getValue().toString()));
+            worker.setManualROI(manualROICb.isSelected());
+            worker.setUseAutoDetection(useAutoDetectionCb.isSelected());
+            worker.setMtchannel(Integer.parseInt(mtChannelCb.getSelectedItem().toString()));
+            worker.setDnachannel(Integer.parseInt(dnaChannelCb.getSelectedItem().toString()));
 
-            lineScanWorker.addPropertyChangeListener((PropertyChangeEvent evt1) -> {
+            worker.addPropertyChangeListener((PropertyChangeEvent evt1) -> {
 
-                if (lineScanWorker.isCancelled()) {
+                if (worker.isCancelled()) {
                     IJ.log("INFO: XLineScan canncelled");
                     runBn.setText("Run");
-                } else if (lineScanWorker.isDone()) {
+                } else if (worker.isDone()) {
                     try {
                         runBn.setText("Run");
-                        XLineScanResult results = (XLineScanResult)lineScanWorker.get();
+                        XLineScanResult results = (XLineScanResult) worker.get();
                         if (results != null) {
                             results.drawPlots();
                         }
@@ -331,24 +331,23 @@ public class XLineScanGUI extends javax.swing.JFrame {
                     }
                 } else if (evt1.getPropertyName().equals("PausedAt")) {
                     String pausedAt = (String) evt1.getNewValue();
-                    xrpw = new XSpinldeLineiPickUpWindow(pausedAt, lineScanWorker, lineScanWorker.getUseAutoDetection(), lineScanWorker.getMtchannel(), lineScanWorker.getDnachannel());
+                    xrpw = new XSpinldeLineiPickUpWindow(pausedAt, worker, worker.getUseAutoDetection(), worker.getMtchannel(), worker.getDnachannel());
                     xrpw.setVisible(true);
 
                 }
             });
 
-            lineScanWorker.execute();
+            worker.execute();
 
         } else {
             if (xrpw != null) {
                 xrpw.canel();
-            } else {
-                lineScanWorker.cancel(true);
+                xrpw=null;
             }
+            worker.cancel(true);
         }
     }//GEN-LAST:event_runBnActionPerformed
 
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

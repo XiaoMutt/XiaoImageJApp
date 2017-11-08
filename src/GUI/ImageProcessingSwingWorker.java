@@ -16,7 +16,7 @@ import javax.swing.SwingWorker;
  */
 public abstract class ImageProcessingSwingWorker extends SwingWorker<Object, String> {
 
-    protected List<Roi> PickedRois;
+    protected volatile List<Roi> PickedRois;
 
     /**
      * Fire a PausedAt property change, and send fileName to event-dispatching

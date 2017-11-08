@@ -109,11 +109,22 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
     }
 
     @Override
+    protected void done() {
+        try {
+            if (DataSaver != null) {
+//the done may be called several times during cancel or normal finish. This is to make sure the DataSaver is closed();
+                DataSaver.close();
+            }
+        } catch (IOException ex) {
+            publish("ERROR: cannot save the result file");
+        }
+    }
+
+    @Override
     protected Void doInBackground() {
         String runTag = java.util.UUID.randomUUID().toString();
         try {
             DataSaver = new XSterlyzerDataSaver(OpenFolder + File.separator + runTag + "-Result.xlsx");
-
         } catch (FileNotFoundException ex) {
             publish("ERROR: cannot create the file to save results");
             return null;

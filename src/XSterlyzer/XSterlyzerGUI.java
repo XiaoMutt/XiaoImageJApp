@@ -187,7 +187,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
 
     private void runBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runBnActionPerformed
         XSterlyzerWorker worker = new XSterlyzerWorker();
-         if ("Run".equals(runBn.getText())) {
+        if ("Run".equals(runBn.getText())) {
             runBn.setText("Cancel");
             worker.setOpenFolder(openFolderTf.getText());
             worker.setChannel(Integer.parseInt(mtChannelCb.getSelectedItem().toString()));
@@ -202,7 +202,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
                     IJ.log("INFO: XSterlyzer canncelled");
                     runBn.setText("Run");
                 } else if (worker.isDone()) {
-                        runBn.setText("Run");
+                    runBn.setText("Run");
                 } else if (evt1.getPropertyName().equals("PausedAt")) {
                     String pausedAt = (String) evt1.getNewValue();
                     pickupWindow = new XSterRoiPickUpWindow(pausedAt, worker, worker.getChannel());
@@ -216,9 +216,10 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         } else {
             if (pickupWindow != null) {
                 pickupWindow.canel();
-            } else {
-                worker.cancel(true);
+                pickupWindow=null;
             }
+            worker.cancel(true);
+
         }
     }//GEN-LAST:event_runBnActionPerformed
 

@@ -41,7 +41,6 @@ public abstract class RoiPickUpWindow extends StackWindow {
         roiList.dispose();
         this.close();
         ipsw.resumeWorker(null);
-        ipsw.cancel(true);
     }
 
 }

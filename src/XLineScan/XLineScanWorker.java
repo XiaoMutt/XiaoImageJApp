@@ -109,6 +109,18 @@ public class XLineScanWorker extends ImageProcessingSwingWorker {
     }
 
     @Override
+    protected void done() {
+        try {
+            if (DataSaver != null) {
+                //the done may be called several times during cancel or normal finish. This is to make sure the DataSaver is closed();
+                DataSaver.close();
+            }
+        } catch (IOException ex) {
+            publish("ERROR: cannot save the result file");
+        }
+    }
+
+    @Override
     protected void processImage(String filePath) {
         ImageProcessor xip = new ImageProcessor(filePath);
         xip.setROILineWidth(ROILineWidth);
