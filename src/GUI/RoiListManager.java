@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.DefaultListModel;
 
 /**
@@ -199,22 +200,20 @@ public class RoiListManager extends javax.swing.JFrame {
         Roi roi = roiMap.get(name);
         imp.setRoi(roi);
         overlay.remove(roi);
- 
+
     }//GEN-LAST:event_roiDisplayListMouseClicked
 
     private void deleteBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBnActionPerformed
-        int[] selected = roiDisplayList.getSelectedIndices();
-        for (int i : selected) {
-            String name = listModel.get(i);
-            listModel.remove(i);
+        List<String> selected = roiDisplayList.getSelectedValuesList();
+
+        for (String name : selected) {
+            listModel.removeElement(name);
             Roi roi = roiMap.remove(name);
             overlay.remove(roi);
-
-            if (editingIndex != -1) {
-                editingIndex = -1;
-                addBn.setText("Add");
-            }
-
+        }
+        if (editingIndex != -1) {
+            editingIndex = -1;
+            addBn.setText("Add");
         }
         imp.deleteRoi();
     }//GEN-LAST:event_deleteBnActionPerformed

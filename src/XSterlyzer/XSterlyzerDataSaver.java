@@ -63,7 +63,7 @@ public class XSterlyzerDataSaver {
 
     private void saveData(XSSFSheet sheet, double[] data, int sheetNum) {
         XSSFRow row = sheet.createRow(RowCount[sheetNum]);
-        row.createCell(0).setCellValue("DataSet" + Integer.toString(RowCount[sheetNum] + 1));
+        row.createCell(0).setCellValue("DataSet" + Integer.toString(RowCount[sheetNum]));
         for (int i = 0; i < data.length; i++) {
             row.createCell(i + 1).setCellValue(data[i]);
         }

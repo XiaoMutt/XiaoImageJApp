@@ -136,7 +136,7 @@ public class ImageProcessor {
     
     public ImageStatistics obtainMeasurements(Roi roi){
         imagePlus.setRoi(roi);
-        return ImageStatistics.getStatistics(imagePlus.getProcessor());
+        return imagePlus.getStatistics();
     }
     /**
      * Save rois onto the image into a file with the given file name.
