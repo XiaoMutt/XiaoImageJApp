@@ -32,8 +32,9 @@ public class AsterBlobs extends BlobFilter{
         new ImageConverter(imp).convertToGray8();
         
         ImageProcessor ip=imp.getChannelProcessor();
+        //Gaussian Blur to even background noise.
         GaussianBlur.blur(ip, 5);
-        //rollingBall method to substract background, using smooth and sliding paraboloid, radius=50;
+        //rollingBall method to substract background;
         BackgroundSubtracter bgs = new BackgroundSubtracter();
         bgs.rollingBallBackground(ip, 50, false, false, false, true, false);
         //apply autothresholder

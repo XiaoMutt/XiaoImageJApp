@@ -20,11 +20,11 @@ import javax.swing.DefaultListModel;
  */
 public class RoiListManager extends javax.swing.JFrame {
 
-    private final HashMap<String, Roi> roiMap = new HashMap<>();
+    private final HashMap<String, Roi> roiMap;
     private final ImagePlus imp;
     private final RoiPickUpWindow imageWd;
     private Overlay overlay;
-    private final DefaultListModel<String> listModel = new DefaultListModel<>();
+    private final DefaultListModel<String> listModel;
     private int editingIndex = -1;
     private int countRoi = 0;
 
@@ -34,9 +34,11 @@ public class RoiListManager extends javax.swing.JFrame {
      * @param imageWindow the ImageWindow paired with this RoiManager.
      */
     public RoiListManager(RoiPickUpWindow imageWindow) {
-        initComponents();
+        roiMap = new HashMap<>();
+        listModel = new DefaultListModel<>();
         imp = imageWindow.getImagePlus();
         imageWd = imageWindow;
+        initComponents();
 
     }
 
@@ -45,6 +47,14 @@ public class RoiListManager extends javax.swing.JFrame {
 
         loadRoiFromImpToList();
         super.setVisible(visible);
+    }
+
+    public void selectRoi(Roi roi) {
+        if (roi != null) {
+            roiDisplayList.setSelectedValue(roi.getName(), true);
+        addBn.setText("Accept");
+        editingIndex = roiDisplayList.getSelectedIndex();            
+        }
     }
 
     private void loadRoiFromImpToList() {
@@ -178,13 +188,17 @@ public class RoiListManager extends javax.swing.JFrame {
         if (editingIndex != -1) {//this is an editing event;
             addBn.setText("Add");
             String name = listModel.getElementAt(editingIndex);
-            //get new roi from imp;
+            //get roi from imp;
             Roi roi = imp.getRoi();
             if (roi != null) {//there is a new roi
-                //replace the old roi with the new roi;
-                roiMap.put(name, roi);
-                overlay.add(roi, name);
-            } else {//there is not a new roi
+                Roi oldRoi = roiMap.get(name);
+                if (roi != oldRoi) {
+                    //replace the old roi with the new roi;
+                    roiMap.put(name, roi);
+                    overlay.remove(oldRoi);
+                    overlay.add(roi, name);
+                }
+            } else if (roi == null || !roi.isArea()) {//there is not a new roi
                 //put back the old roi;
                 //get old roi;
                 roi = roiMap.get(name);
@@ -199,7 +213,7 @@ public class RoiListManager extends javax.swing.JFrame {
         String name = listModel.get(editingIndex);
         Roi roi = roiMap.get(name);
         imp.setRoi(roi);
-        overlay.remove(roi);
+        //overlay.remove(roi);
 
     }//GEN-LAST:event_roiDisplayListMouseClicked
 
@@ -220,11 +234,17 @@ public class RoiListManager extends javax.swing.JFrame {
 
     private void addBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBnActionPerformed
         Roi roi = imp.getRoi();
-        if (roi != null) {
+        if (roi != null && roi.isArea()) {
             roi.setStrokeColor(Color.yellow);
             if (editingIndex != -1) {//this is editing
                 String name = listModel.getElementAt(editingIndex);
-                roiMap.replace(name, roi);
+                Roi oldRoi = roiMap.get(name);
+                if (roi != oldRoi) {
+                    //replace the old roi with the new roi;
+                    roiMap.put(name, roi);
+                    overlay.remove(oldRoi);
+                    overlay.add(roi, name);
+                }
                 editingIndex = -1;
                 addBn.setText("Add");
             } else {//this is adding new
@@ -234,10 +254,12 @@ public class RoiListManager extends javax.swing.JFrame {
                 roi.setName(name);
                 //roiDisplayList.setModel(listModel);
                 roiMap.put(name, roi);
+                overlay.add(roi);
             }
-            overlay.add(roi);
-            imp.deleteRoi();
+        }else{//the roi is missing or invalid
+            addBn.setText("Add");
         }
+        imp.deleteRoi();
     }//GEN-LAST:event_addBnActionPerformed
 
     private void doneBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneBnActionPerformed
@@ -256,18 +278,13 @@ public class RoiListManager extends javax.swing.JFrame {
     }//GEN-LAST:event_doneBnActionPerformed
 
     private void hideCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideCbActionPerformed
+        imp.deleteRoi();
         if (editingIndex != -1) {//this is editing event;
             addBn.setText("Add");
-            String name = listModel.getElementAt(editingIndex);
-            //put back the old roi;
-            //get old roi;
-            Roi roi = roiMap.get(name);
-            overlay.add(roi, name);
             editingIndex = -1;
-            imp.deleteRoi();
+
         }
         if (hideCb.isSelected()) {
-            imp.deleteRoi();
             imp.setOverlay(null);
         } else {
             imp.setOverlay(overlay);
