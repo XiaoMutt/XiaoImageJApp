@@ -6,6 +6,7 @@ package AiSterlyzer;
 import ImageProcessing.AutoThresholder;
 import ImageProcessing.BlobFilter;
 import ImageProcessing.BlobFilterParam;
+import ImageProcessing.GaussianBlur;
 import ij.ImagePlus;
 import ij.blob.Blob;
 import ij.plugin.filter.BackgroundSubtracter;
@@ -31,14 +32,14 @@ public class AsterBlobs extends BlobFilter{
         new ImageConverter(imp).convertToGray8();
         
         ImageProcessor ip=imp.getChannelProcessor();
-        
+        GaussianBlur.blur(ip, 5);
         //rollingBall method to substract background, using smooth and sliding paraboloid, radius=50;
         BackgroundSubtracter bgs = new BackgroundSubtracter();
-        bgs.rollingBallBackground(ip, 100, false, false, false, true, false);
-        //apply median filter
-        new RankFilters().rank(ip, 2, RankFilters.MEDIAN);     
+        bgs.rollingBallBackground(ip, 50, false, false, false, true, false);
         //apply autothresholder
         AutoThresholder.autoTheshold(imp, "Li");
+        //apply median filter
+        new RankFilters().rank(ip, 2, RankFilters.MEDIAN);          
         //find blobs
         filterAndSmoothBlobs();        
     }

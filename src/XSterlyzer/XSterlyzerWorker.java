@@ -83,7 +83,7 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
                 publish("INFO: " + rois.length + (rois.length < 2 ? " ROI is" : " ROIs are") + " added");
                 xip.saveROIs(rois, filePath);
             } else {
-                publish("INFO: no ROIs were found; skip this image");
+                publish("INFO: image skipped");
             }
         }
 
