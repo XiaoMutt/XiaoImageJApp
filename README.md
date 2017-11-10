@@ -8,4 +8,4 @@
 
 ### Tools
 * XLineScan semi-automated spindle pole-to-pole line scan tool
-* XSterlyzer semi-automated aster analyzer output to aster size, aster area, and aster count per image
+* XSterlyzer semi-automated aster analyzer output to aster area, aster mean intensity, and aster count per image
