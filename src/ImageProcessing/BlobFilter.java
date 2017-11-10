@@ -10,6 +10,7 @@ import AiSpindle.FullPolygon;
 import ij.ImagePlus;
 import ij.blob.Blob;
 import ij.blob.ManyBlobs;
+import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 import java.awt.Polygon;
 import java.util.ArrayList;
@@ -55,6 +56,11 @@ public abstract class BlobFilter {
         if (!polygons.isEmpty()) {
             return;//ready processed.
         }
+        
+        //convert to 8-bit;
+        imp.resetDisplayRange();//if not reset, the ImageConverter will convert according to the display range.
+        new ImageConverter(imp).convertToGray8();  
+        
         ManyBlobs blobs = new ManyBlobs(imp);
         blobs.setBackground(0);
         blobs.findConnectedComponents();

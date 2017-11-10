@@ -22,14 +22,14 @@ import ij.process.ImageProcessor;
 public class AutoThresholder {
 
     public static void autoTheshold(ImagePlus imp, String method) {
-        if (imp == null || imp.getBitDepth() != 8) {
-            return;
-        }
+//        if (imp == null || imp.getBitDepth() != 8) {
+//            return;
+//        }
         ImageProcessor ip = imp.getProcessor();
         int xe = ip.getWidth();
         int ye = ip.getHeight();
         int background = 0;
-        int foreground = 255;
+        int foreground = (int)Math.pow(2,imp.getBitDepth())-1;
         int[] data = ip.getHistogram();
 
         int minBin = 0, maxBin = data.length - 1;
@@ -48,7 +48,7 @@ public class AutoThresholder {
                 break;
             }
         }
-        int threshold = 0;
+        int threshold=0;
         if (minBin < maxBin) {
             int[] data2 = new int[maxBin - minBin + 1];
             for (int i = minBin; i <= maxBin; i++) {

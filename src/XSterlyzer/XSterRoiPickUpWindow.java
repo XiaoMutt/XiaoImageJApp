@@ -25,7 +25,7 @@ public class XSterRoiPickUpWindow extends RoiPickUpWindow {
     }
 
     private Overlay autoDetection(ImagePlus imp, int mtChannel) {
-        AsterIdentifier ai = new AsterIdentifier(imp, mtChannel, true);
+        AsterIdentifier ai = new AsterIdentifier(imp, mtChannel, false);
         Overlay overlay = new Overlay();
         List<Polygon> asters = ai.getAsterPolygons();
         int i = 0;

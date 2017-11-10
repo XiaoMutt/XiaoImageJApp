@@ -82,7 +82,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         buttonGroup1.add(useRollingBallRb);
         useRollingBallRb.setText("Subtract background usingthe  Rolling Ball method with a Radius of");
 
-        rollingBallRadiusSp.setModel(new javax.swing.SpinnerNumberModel(150, 10, 1000, 10));
+        rollingBallRadiusSp.setModel(new javax.swing.SpinnerNumberModel(50, 10, 1000, 10));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

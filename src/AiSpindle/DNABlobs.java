@@ -30,8 +30,6 @@ public class DNABlobs extends BlobFilter {
         filterParams.add(new BlobFilterParam(Blob.GETENCLOSEDAREA, Math.max(3e-4 * area, 100), Math.max(0.5 * area, 15)));
         ImageProcessor ip=imp.getChannelProcessor();
         new RankFilters().rank(ip, 3, RankFilters.MEDIAN);
-        imp.resetDisplayRange();//if not reset the ImageConverter will not function properly (do not why).
-        new ImageConverter(imp).convertToGray8();
         //apply autothresholder
         ImageProcessing.AutoThresholder.autoTheshold(imp, "Yen");      
         //RubberBandBaseLineCorrecter.CorrectBaseline(imp.getProcessor());         

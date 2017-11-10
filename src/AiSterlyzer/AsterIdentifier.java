@@ -9,7 +9,9 @@ import java.awt.Polygon;
 import java.util.List;
 
 /**
- *
+ * Process the ImagePlus Object and identify asters.
+ * The ImagePlus object will not be changed.
+ * 
  * @author Xiao Zhou
  */
 public class AsterIdentifier {
@@ -19,7 +21,7 @@ public class AsterIdentifier {
     public AsterIdentifier(ImagePlus imagePlus, int channel, boolean excludeOnEdge) {
 
         ImageStack imageStack = imagePlus.getImageStack();
-        ImagePlus mtImp = new ImagePlus("mt", imageStack.getProcessor(channel));
+        ImagePlus mtImp = new ImagePlus("mt", imageStack.getProcessor(channel).duplicate());
         asterBlobs = new AsterBlobs(mtImp, excludeOnEdge);
     }
 
