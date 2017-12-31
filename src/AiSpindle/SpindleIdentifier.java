@@ -36,6 +36,7 @@ public class SpindleIdentifier {
      */
     public SpindleIdentifier(ImagePlus imagePlus, int mtChannel, int dnaChannel) {
         spindles = new ArrayList<>();
+        imagePlus=imagePlus.duplicate();
         ImageStack imageStack = imagePlus.getImageStack();
         mtImp = new ImagePlus("mt", imageStack.getProcessor(mtChannel));
         dnaImp = new ImagePlus("dna", imageStack.getProcessor(dnaChannel));

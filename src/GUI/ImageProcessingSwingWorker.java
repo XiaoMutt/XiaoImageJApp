@@ -1,6 +1,5 @@
 /*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
+ *GPLv3
  */
 package GUI;
 
@@ -52,5 +51,9 @@ public abstract class ImageProcessingSwingWorker extends SwingWorker<Object, Str
             IJ.log(str);
         });
     }
+    /**
+     * Process the image file in the SwingWorker thread.
+     * @param filePath the file path of the image file that needs to be opened.
+     */
     protected abstract void processImage(String filePath);
 }

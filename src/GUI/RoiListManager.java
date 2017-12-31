@@ -7,12 +7,20 @@ import ij.ImagePlus;
 import ij.gui.Overlay;
 import ij.gui.Roi;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -20,13 +28,17 @@ import javax.swing.DefaultListModel;
  */
 public class RoiListManager extends javax.swing.JFrame {
 
-    private final HashMap<String, Roi> roiMap;
+    private final HashMap<String, Roi> roiMap;//maintain the Rois
     private final ImagePlus imp;
     private final RoiPickUpWindow imageWd;
     private Overlay overlay;
     private final DefaultListModel<String> listModel;
     private int editingIndex = -1;
     private int countRoi = 0;
+    private final JPopupMenu editPu = new JPopupMenu();
+    private final JTextField editTf = new JTextField();
+
+    ;
 
     /**
      * Creates new form RoiListManager
@@ -42,6 +54,32 @@ public class RoiListManager extends javax.swing.JFrame {
 
     }
 
+    public void editRoiName() {
+        //initiate edit popup;
+        editTf.setBorder(UIManager.getBorder("List.focusCellHighlightBorder"));
+        editTf.addActionListener((ActionEvent e) -> {
+            String name = listModel.getElementAt(editingIndex);
+            listModel.set(editingIndex, editTf.getText());
+            Roi roi = roiMap.get(name);
+            roiMap.remove(name);
+            roiMap.put(editTf.getText(), roi);
+            overlay.remove(roi);
+            overlay.add(roi, editTf.getText());
+            editPu.setVisible(false);
+        });
+
+        editPu.setBorder(new EmptyBorder(0, 0, 0, 0));
+        editPu.add(editTf);
+
+        int row = roiDisplayList.getSelectedIndex();
+        Rectangle r = roiDisplayList.getCellBounds(row, row);
+        editPu.setPreferredSize(new Dimension(r.width, r.height));
+        editPu.show(roiDisplayList, r.x, r.y);
+        editTf.setText(roiDisplayList.getSelectedValue());
+        editTf.selectAll();
+        editTf.requestFocusInWindow();
+    }
+
     @Override
     public void setVisible(boolean visible) {
 
@@ -49,11 +87,13 @@ public class RoiListManager extends javax.swing.JFrame {
         super.setVisible(visible);
     }
 
-    public void selectRoi(Roi roi) {
-        if (roi != null) {
-            roiDisplayList.setSelectedValue(roi.getName(), true);
-        addBn.setText("Accept");
-        editingIndex = roiDisplayList.getSelectedIndex();            
+    public void selectRoiInDisplayList(String name) {
+        if (name != null) {
+            roiDisplayList.setSelectedValue(name, true);
+            addBn.setText("Accept");
+            editingIndex = roiDisplayList.getSelectedIndex();
+        } else {
+            addBn.setText("Add");
         }
     }
 
@@ -117,6 +157,11 @@ public class RoiListManager extends javax.swing.JFrame {
                 roiDisplayListMouseClicked(evt);
             }
         });
+        roiDisplayList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                roiDisplayListKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(roiDisplayList);
 
         deleteBn.setText("Delete");
@@ -161,7 +206,7 @@ public class RoiListManager extends javax.swing.JFrame {
                     .addComponent(doneBn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(hideCb)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 39, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -173,10 +218,10 @@ public class RoiListManager extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(deleteBn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addBn, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(addBn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(hideCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(doneBn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -185,56 +230,48 @@ public class RoiListManager extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void roiDisplayListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_roiDisplayListMouseClicked
-        if (editingIndex != -1) {//this is an editing event;
-            addBn.setText("Add");
-            String name = listModel.getElementAt(editingIndex);
-            //get roi from imp;
-            Roi roi = imp.getRoi();
-            if (roi != null) {//there is a new roi
-                Roi oldRoi = roiMap.get(name);
-                if (roi != oldRoi) {
-                    //replace the old roi with the new roi;
-                    roiMap.put(name, roi);
-                    overlay.remove(oldRoi);
+        if (evt.getClickCount() == 2) {
+            //this is Roi name editing event;
+            editRoiName();
+        } else {
+            if (editingIndex != -1) {//this is an editing event;
+                addBn.setText("Add");
+                String name = listModel.getElementAt(editingIndex);
+                //get roi from imp;
+                Roi roi = imp.getRoi();
+                if (roi != null) {//there is a new roi
+                    Roi oldRoi = roiMap.get(name);
+                    if (roi != oldRoi) {
+                        //replace the old roi with the new roi;
+                        roiMap.put(name, roi);
+                        overlay.remove(oldRoi);
+                        overlay.add(roi, name);
+                    }
+                } else if (roi == null) {//there is not a new roi
+                    //put back the old roi;
+                    //get old roi;
+                    roi = roiMap.get(name);
                     overlay.add(roi, name);
                 }
-            } else if (roi == null || !roi.isArea()) {//there is not a new roi
-                //put back the old roi;
-                //get old roi;
-                roi = roiMap.get(name);
-                overlay.add(roi, name);
+                editingIndex = -1;
+                imp.deleteRoi();
+                addBn.setText("Accept");
             }
-            editingIndex = -1;
-            imp.deleteRoi();
-        }
-        // if (evt.getClickCount() == 2) {
-        addBn.setText("Accept");
-        editingIndex = roiDisplayList.locationToIndex(evt.getPoint());
-        String name = listModel.get(editingIndex);
-        Roi roi = roiMap.get(name);
-        imp.setRoi(roi);
-        //overlay.remove(roi);
 
+            editingIndex = roiDisplayList.locationToIndex(evt.getPoint());
+            String name = listModel.get(editingIndex);
+            Roi roi = roiMap.get(name);
+            imp.setRoi(roi);
+        }
     }//GEN-LAST:event_roiDisplayListMouseClicked
 
     private void deleteBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBnActionPerformed
-        List<String> selected = roiDisplayList.getSelectedValuesList();
-
-        for (String name : selected) {
-            listModel.removeElement(name);
-            Roi roi = roiMap.remove(name);
-            overlay.remove(roi);
-        }
-        if (editingIndex != -1) {
-            editingIndex = -1;
-            addBn.setText("Add");
-        }
-        imp.deleteRoi();
+        deleteRois();
     }//GEN-LAST:event_deleteBnActionPerformed
 
     private void addBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBnActionPerformed
         Roi roi = imp.getRoi();
-        if (roi != null && roi.isArea()) {
+        if (roi != null) {
             roi.setStrokeColor(Color.yellow);
             if (editingIndex != -1) {//this is editing
                 String name = listModel.getElementAt(editingIndex);
@@ -256,10 +293,11 @@ public class RoiListManager extends javax.swing.JFrame {
                 roiMap.put(name, roi);
                 overlay.add(roi);
             }
-        }else{//the roi is missing or invalid
+        } else {//the roi is missing or invalid
             addBn.setText("Add");
         }
         imp.deleteRoi();
+        imp.setOverlay(overlay);
     }//GEN-LAST:event_addBnActionPerformed
 
     private void doneBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneBnActionPerformed
@@ -292,6 +330,12 @@ public class RoiListManager extends javax.swing.JFrame {
 // TODO add your handling code here:
     }//GEN-LAST:event_hideCbActionPerformed
 
+    private void roiDisplayListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_roiDisplayListKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            deleteRois();
+        }
+    }//GEN-LAST:event_roiDisplayListKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBn;
@@ -301,4 +345,22 @@ public class RoiListManager extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> roiDisplayList;
     // End of variables declaration//GEN-END:variables
+
+    public void deleteRois() {
+        List<String> selected = roiDisplayList.getSelectedValuesList();
+
+        for (String name : selected) {
+            listModel.removeElement(name);
+            Roi roi = roiMap.remove(name);
+            overlay.remove(roi);
+        }
+        if (editingIndex != -1) {
+            editingIndex = -1;
+            addBn.setText("Add");
+        }
+        imp.deleteRoi();
+        imp.setOverlay(overlay);
+        hideCb.setSelected(false);
+    }
+
 }

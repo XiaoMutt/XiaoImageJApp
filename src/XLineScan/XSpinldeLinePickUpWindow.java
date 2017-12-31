@@ -19,11 +19,11 @@ import java.util.List;
  *
  * @author Xiao Zhou
  */
-public class XSpinldeLineiPickUpWindow extends RoiPickUpWindow {
+public class XSpinldeLinePickUpWindow extends RoiPickUpWindow {
     private final int mtChannel;
     private final int dnaChannel;
     
-    public XSpinldeLineiPickUpWindow(String fileName, XLineScanWorker lineScanWorker, boolean autoDetection, int mtChannel, int dnaChannel) {
+    public XSpinldeLinePickUpWindow(String fileName, XLineScanWorker lineScanWorker, boolean autoDetection, int mtChannel, int dnaChannel) {
         super(fileName, lineScanWorker);
         IJ.setTool(Toolbar.LINE);        
         this.mtChannel=mtChannel;

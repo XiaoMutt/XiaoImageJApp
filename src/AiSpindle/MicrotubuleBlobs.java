@@ -9,7 +9,6 @@ import ij.ImagePlus;
 import ij.blob.Blob;
 import ij.plugin.filter.RankFilters;
 import ImageProcessing.AutoThresholder;
-import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 
 /**

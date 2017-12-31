@@ -35,7 +35,7 @@ public class FullPolygon {
      * @return smoothed Polygon object
      */
     public Polygon getSmoothedContour(int percentualThresholdValue) {
-        if (fullPol.npoints < 2) {
+        if (fullPol.npoints < 3) {
             return fullPol;
         }
 
@@ -238,7 +238,7 @@ public class FullPolygon {
      */
     public PointPair getFarthestInnerLinePointPairInOneDirection(double radianAngle) {
         int[] ox = fullPol.xpoints, oy = fullPol.ypoints;
-        ////HashMap <transformed y, TreeMap<transformed x, original i index>
+        //HashMap <transformed y, TreeMap<transformed x, original i index>
         HashMap<Integer, TreeMap<Integer, Integer>> mapYXI = new HashMap<>();
         int x0 = ox[0], y0 = oy[0];
         TreeMap<Integer, Integer> treeMap = new TreeMap<>();

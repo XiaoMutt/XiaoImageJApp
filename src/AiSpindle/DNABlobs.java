@@ -8,7 +8,6 @@ import ImageProcessing.BlobFilterParam;
 import ij.ImagePlus;
 import ij.blob.Blob;
 import ij.plugin.filter.RankFilters;
-import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 
 /**

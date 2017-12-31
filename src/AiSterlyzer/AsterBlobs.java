@@ -26,7 +26,7 @@ public class AsterBlobs extends BlobFilter {
      */
     public AsterBlobs(ImagePlus imagePlus, boolean excludeOnEdge) {
         super(imagePlus, excludeOnEdge, 0);
-        filterParams.add(new BlobFilterParam(Blob.GETENCLOSEDAREA, 100, Double.MAX_VALUE));
+        filterParams.add(new BlobFilterParam(Blob.GETENCLOSEDAREA, 256, Double.MAX_VALUE));
 
         ImageProcessor ip = imp.getChannelProcessor();
         

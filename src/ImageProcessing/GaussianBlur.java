@@ -259,7 +259,7 @@ public class GaussianBlur {
      * Array index corresponding to the kernel center is
      * unitLength*3/2
      */
-    final static private float[] makeDownscaleKernel(final int unitLength) {
+    private static float[] makeDownscaleKernel(final int unitLength) {
         final int mid = unitLength * 3 / 2;
         final float[] kernel = new float[3 * unitLength];
         for (int i = 0; i <= unitLength / 2; i++) {
@@ -303,7 +303,7 @@ public class GaussianBlur {
      * array index 0 ... 4*unitLength (whereby the last point is not in the
      * array any more).
      */
-    final static private float[] makeUpscaleKernel(final int unitLength) {
+    private static float[] makeUpscaleKernel(final int unitLength) {
         final float[] kernel = new float[4 * unitLength];
         final int mid = 2 * unitLength;
         kernel[0] = 0;
@@ -350,7 +350,7 @@ public class GaussianBlur {
      * (for an ImageProcessor, it should be <code>1</code> for a row,
      * <code>width</code> for a column)
      */
-    final static private void convolveLine(final float[] input, final float[] pixels, final float[][] kernel, final int readFrom,
+    private static void convolveLine(final float[] input, final float[] pixels, final float[][] kernel, final int readFrom,
             final int readTo, final int writeFrom, final int writeTo, final int point0, final int pointInc) {
         final int length = input.length;
         final float first = input[0];                 //out-of-edge pixels are replaced by nearest edge pixels

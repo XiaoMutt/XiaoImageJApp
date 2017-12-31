@@ -19,9 +19,9 @@ public class AsterIdentifier {
     private final AsterBlobs asterBlobs;
 
     public AsterIdentifier(ImagePlus imagePlus, int channel, boolean excludeOnEdge) {
-
+        imagePlus=imagePlus.duplicate();
         ImageStack imageStack = imagePlus.getImageStack();
-        ImagePlus mtImp = new ImagePlus("mt", imageStack.getProcessor(channel).duplicate());
+        ImagePlus mtImp = new ImagePlus("mt", imageStack.getProcessor(channel));
         asterBlobs = new AsterBlobs(mtImp, excludeOnEdge);
     }
 
