@@ -4,7 +4,7 @@
 package Main;
 
 import XLineScan.XLineScanGUI;
-import XSterlyzer.XSterlyzerGUI;
+import XBlobAnalyzer.XSterlyzerGUI;
 import ij.ImageJ;
 
 /**

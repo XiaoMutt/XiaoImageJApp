@@ -21,7 +21,7 @@ import ij.process.ImageProcessor;
  */
 public class AutoThresholder {
 
-    public static void autoTheshold(ImagePlus imp, String method) {
+    public static void autoThreshold(ImagePlus imp, String method) {
 //        if (imp == null || imp.getBitDepth() != 8) {
 //            return;
 //        }

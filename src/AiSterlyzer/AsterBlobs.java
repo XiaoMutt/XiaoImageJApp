@@ -41,7 +41,7 @@ public class AsterBlobs extends BlobFilter {
         new RankFilters().rank(ip, 2, RankFilters.MEDIAN); 
         
         //apply autothresholder
-        AutoThresholder.autoTheshold(imp, "Triangle");
+        AutoThresholder.autoThreshold(imp, "Triangle");
         
 
         //find blobs

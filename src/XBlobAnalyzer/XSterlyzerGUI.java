@@ -1,10 +1,12 @@
 /*
  * GPLv3
  */
-package XSterlyzer;
+package XBlobAnalyzer;
 
 import ij.IJ;
+import ij.ImageJ;
 import ij.io.DirectoryChooser;
+import ij.io.OpenDialog;
 import java.beans.PropertyChangeEvent;
 
 /**
@@ -37,14 +39,11 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         fileNameRegexCb = new javax.swing.JComboBox();
         runBn = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        subtractCertainBackgroundRb = new javax.swing.JRadioButton();
-        backgroundValueSp = new javax.swing.JSpinner();
-        useRollingBallRb = new javax.swing.JRadioButton();
-        rollingBallRadiusSp = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
         mtChannelCb = new javax.swing.JComboBox();
         ignorelROICb = new javax.swing.JCheckBox();
+        bsFileBn = new javax.swing.JButton();
+        beanShellFileTf = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("XSterlyzer");
@@ -71,50 +70,6 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Substract Background"));
-
-        buttonGroup1.add(subtractCertainBackgroundRb);
-        subtractCertainBackgroundRb.setSelected(true);
-        subtractCertainBackgroundRb.setText("Subtract a certain background:");
-
-        backgroundValueSp.setModel(new javax.swing.SpinnerNumberModel(0, 0, 1000, 10));
-
-        buttonGroup1.add(useRollingBallRb);
-        useRollingBallRb.setText("Subtract background usingthe  Rolling Ball method with a Radius of");
-
-        rollingBallRadiusSp.setModel(new javax.swing.SpinnerNumberModel(50, 10, 1000, 10));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(subtractCertainBackgroundRb)
-                        .addGap(283, 283, 283)
-                        .addComponent(backgroundValueSp, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(useRollingBallRb, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rollingBallRadiusSp, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(subtractCertainBackgroundRb)
-                    .addComponent(backgroundValueSp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(useRollingBallRb)
-                    .addComponent(rollingBallRadiusSp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jLabel5.setText("Microtubule Channel");
 
         mtChannelCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4" }));
@@ -122,31 +77,40 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         ignorelROICb.setSelected(true);
         ignorelROICb.setText("Ignore any saved ROIs in image files and mannually choose ROIs for each image by poping up each image");
 
+        bsFileBn.setText("Choose a BeanShell file");
+        bsFileBn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bsFileBnActionPerformed(evt);
+            }
+        });
+
+        beanShellFileTf.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 4, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mtChannelCb, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ignorelROICb, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(runBn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(mtChannelCb, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(467, 467, 467))
+                    .addComponent(ignorelROICb, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(openFolderBn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(bsFileBn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(openFolderBn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fileNameRegexCb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(openFolderTf))))
+                            .addComponent(openFolderTf)
+                            .addComponent(beanShellFileTf, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -164,13 +128,15 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(mtChannelCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bsFileBn)
+                    .addComponent(beanShellFileTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
                 .addComponent(ignorelROICb)
                 .addGap(18, 18, 18)
                 .addComponent(runBn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -182,7 +148,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         if (dir != null) {
             openFolderTf.setText(dir);
         }
-        runBn.setEnabled(openFolderTf.getText().length() != 0);
+        runBn.setEnabled(openFolderTf.getText().length() != 0&&beanShellFileTf.getText().length()!=0);
     }//GEN-LAST:event_openFolderBnActionPerformed
 
     private void runBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runBnActionPerformed
@@ -192,10 +158,8 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
             worker.setOpenFolder(openFolderTf.getText());
             worker.setChannel(Integer.parseInt(mtChannelCb.getSelectedItem().toString()));
             worker.setFileNameRegex(fileNameRegexCb.getSelectedItem().toString());
-            worker.setUsingRollingBall(useRollingBallRb.isSelected());
-            worker.setRollingBallRadius(Integer.parseInt(rollingBallRadiusSp.getValue().toString()));
-            worker.setBackgroundValue(Integer.parseInt(backgroundValueSp.getValue().toString()));
             worker.setIgnoreROI(ignorelROICb.isSelected());
+            worker.setBsFileName(beanShellFileTf.getText());
 
             worker.addPropertyChangeListener((PropertyChangeEvent evt1) -> {
                 if (worker.isCancelled()) {
@@ -224,21 +188,36 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_runBnActionPerformed
 
+    private void bsFileBnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsFileBnActionPerformed
+        OpenDialog od = new OpenDialog("Choose a BeanShell File");
+        if (od.getPath() != null) {
+            beanShellFileTf.setText(od.getPath());
+        }
+        runBn.setEnabled(openFolderTf.getText().length() != 0&&beanShellFileTf.getText().length()!=0);        // TODO add your handling code here:
+    }//GEN-LAST:event_bsFileBnActionPerformed
+    public static void main(String args[]) {
+
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new XSterlyzerGUI().setVisible(true);
+            ImageJ imj = new ImageJ(ImageJ.EMBEDDED);
+            imj.exitWhenQuitting(true);
+            imj.setVisible(true);
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner backgroundValueSp;
+    private javax.swing.JTextField beanShellFileTf;
+    private javax.swing.JButton bsFileBn;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox fileNameRegexCb;
     private javax.swing.JCheckBox ignorelROICb;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JComboBox mtChannelCb;
     private javax.swing.JButton openFolderBn;
     private javax.swing.JTextField openFolderTf;
-    private javax.swing.JSpinner rollingBallRadiusSp;
     private javax.swing.JButton runBn;
-    private javax.swing.JRadioButton subtractCertainBackgroundRb;
-    private javax.swing.JRadioButton useRollingBallRb;
     // End of variables declaration//GEN-END:variables
 
 }

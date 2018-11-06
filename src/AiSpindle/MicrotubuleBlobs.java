@@ -30,7 +30,7 @@ public class MicrotubuleBlobs extends BlobFilter {
         ImageProcessor ip = imp.getChannelProcessor();
         new RankFilters().rank(ip, 3, RankFilters.MEDIAN);
         //apply autothresholder
-        AutoThresholder.autoTheshold(imp, "Yen");
+        AutoThresholder.autoThreshold(imp, "Yen");
         //RubberBandBaseLineCorrecter.CorrectBaseline(imp.getProcessor());          
         filterAndSmoothBlobs();
     }

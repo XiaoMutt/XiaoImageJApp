@@ -30,7 +30,7 @@ public class DNABlobs extends BlobFilter {
         ImageProcessor ip=imp.getChannelProcessor();
         new RankFilters().rank(ip, 3, RankFilters.MEDIAN);
         //apply autothresholder
-        ImageProcessing.AutoThresholder.autoTheshold(imp, "Yen");      
+        ImageProcessing.AutoThresholder.autoThreshold(imp, "Yen");      
         //RubberBandBaseLineCorrecter.CorrectBaseline(imp.getProcessor());         
         filterAndSmoothBlobs();
     }

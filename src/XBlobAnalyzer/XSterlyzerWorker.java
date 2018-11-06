@@ -1,7 +1,7 @@
 /*
  * GPLv3
  */
-package XSterlyzer;
+package XBlobAnalyzer;
 
 import FileManager.FileIterator;
 import GUI.ImageProcessingSwingWorker;
@@ -22,14 +22,20 @@ import java.util.regex.Pattern;
 public class XSterlyzerWorker extends ImageProcessingSwingWorker {
 
     private String OpenFolder;
-    private int BackgroundValue;
     private int Channel;
-    private int RollingBallRadius;
-    private boolean UsingRollingBall;
     private boolean IgnoreROI;
     private XSterlyzerDataSaver DataSaver;
     private Pattern FileNameRegex;
+    private String bsFileName;
 
+    public String getBsFileName() {
+        return bsFileName;
+    }
+
+    public void setBsFileName(String bsFileName) {
+        this.bsFileName = bsFileName;
+    }
+    
     public void setIgnoreROI(boolean IgnoreROI) {
         this.IgnoreROI = IgnoreROI;
     }
@@ -38,9 +44,6 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
         this.OpenFolder = OpenFolder;
     }
 
-    public void setBackgroundValue(int BackgroundValue) {
-        this.BackgroundValue = BackgroundValue;
-    }
 
     public void setChannel(int channel) {
         this.Channel = channel;
@@ -50,13 +53,8 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
         this.PickedRois = pickedRois;
     }
 
-    public void setRollingBallRadius(int RollingBallRadius) {
-        this.RollingBallRadius = RollingBallRadius;
-    }
 
-    public void setUsingRollingBall(boolean UsingRollingBall) {
-        this.UsingRollingBall = UsingRollingBall;
-    }
+
 
     public void setFileNameRegex(String fileNameRegex) {
         FileNameRegex = Pattern.compile(fileNameRegex);
@@ -67,12 +65,6 @@ public class XSterlyzerWorker extends ImageProcessingSwingWorker {
         ImageProcessor xip = new ImageProcessor(filePath);
         publish("INFO: processing " + filePath);
 
-        //Subtract background;
-        if (UsingRollingBall) {
-            xip.subtractBackgroundByRollingBall(RollingBallRadius, Channel);
-        } else {
-            xip.subtractCertainBackground(BackgroundValue, Channel);
-        }
         //Obtain ROIs;
         Roi[] rois = xip.obtainROIs();
 

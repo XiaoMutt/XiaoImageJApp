@@ -1,7 +1,7 @@
 /*
  * GPLv3
  */
-package XSterlyzer;
+package XBlobAnalyzer;
 
 /**
  *
