@@ -8,4 +8,4 @@
 
 ### Tools
 * XLineScan semi-automated spindle pole-to-pole line scan tool
-* XSterlyzer semi-automated aster analyzer output to aster area, aster mean intensity, and aster count per image
+* XSterlyzer semi-automated aster analyzer output to aster area, aster mean intensity, and aster count per image. For calculating other parameters, a BeanShell script can be used (see use XImageJ_Walker).

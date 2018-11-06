@@ -78,6 +78,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         ignorelROICb.setText("Ignore any saved ROIs in image files and mannually choose ROIs for each image by poping up each image");
 
         bsFileBn.setText("Choose a BeanShell file");
+        bsFileBn.setEnabled(false);
         bsFileBn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bsFileBnActionPerformed(evt);
@@ -85,6 +86,7 @@ public class XSterlyzerGUI extends javax.swing.JFrame {
         });
 
         beanShellFileTf.setEditable(false);
+        beanShellFileTf.setText("Not implemented yet");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

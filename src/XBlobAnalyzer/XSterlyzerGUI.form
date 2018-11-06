@@ -159,6 +159,7 @@
     <Component class="javax.swing.JButton" name="bsFileBn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Choose a BeanShell file"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bsFileBnActionPerformed"/>
@@ -167,6 +168,7 @@
     <Component class="javax.swing.JTextField" name="beanShellFileTf">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
+        <Property name="text" type="java.lang.String" value="Not implemented yet"/>
       </Properties>
     </Component>
   </SubComponents>
