@@ -66,12 +66,23 @@ public class SpindleContourAnalyzer {
     private void calMtPolygonsAxises() {
         //calculate axis for each mtPolygon;
         if (dnaAxis.size() < 2) {
-            //one DNA axis found and one mtPolygons found, use mtPolygons microtubule direction axis.
+            //one DNA axis found
             if (mtFullPolygons.size() == 1) {
+                // one mtPolygons found, try to use dna axis first.
                 FullPolygon fpg = mtFullPolygons.get(0);
-                DirecionAnalysisResult dar = calDirection(mtImp, fpg.getPolygon());
-                mtAxis.add(fpg.getFarthestInnerLinePointPairInOneDirection(dar.angle));
+                PointPair pp = dnaAxis.get(0);
+                PointPair axisPP = fpg.getFarthestInnerLinePointPairInOneDirectionAndIntersectALine(pp.getDirection()
+                        + Math.PI / 2, pp.shrinkPointPair(0.90));//spindle axis should pass DNA axis center 20% region(ie shrink 90%).
+                if (axisPP != null) {
+                    mtAxis.add(axisPP);
+                } else {
+                    // cannot find axis using dnaAxis. use mtPolygons microtubule direction axis instead.
+                    DirecionAnalysisResult dar = calDirection(mtImp, fpg.getPolygon());
+                    mtAxis.add(fpg.getFarthestInnerLinePointPairInOneDirection(dar.angle));
+                }
+
             } else {
+                // multiple mtPolygons found, use microtubule directions
                 for (FullPolygon fpg : mtFullPolygons) {
                     DirecionAnalysisResult dar = calDirection(mtImp, fpg.getPolygon());
                     mtAxis.add(fpg.getFarthestInnerLinePointPairInOneDirection(dar.angle));
