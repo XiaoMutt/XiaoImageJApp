@@ -4,3 +4,5 @@ test/
 build.xml
 manifest.mf
 *.DS_Store
+.idea/
+out/
